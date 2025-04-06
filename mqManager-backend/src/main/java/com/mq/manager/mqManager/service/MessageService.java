@@ -1,11 +1,9 @@
 package com.mq.manager.mqManager.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
+import com.mq.manager.mqManager.Utils.exceptions.ResourceNotFoundException;
 import com.mq.manager.mqManager.entity.Message;
 import com.mq.manager.mqManager.repository.MessageRepository;
 
@@ -18,24 +16,22 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    @JmsListener(destination = "DEV.QUEUE.1")
-    public void processMessage(String msg) {
-        Message message = new Message();
-        message.setContent(msg);
-        message.setReceivedAt(LocalDateTime.now());
-        messageRepository.save(message);
-    }
-
-    public List<Message> findAllMessages() {
+    public List<Message> findAll() {
         return messageRepository.findAll();
     }
 
-    public Optional<Message> findMessageById(Long id) {
+    public Optional<Message> findById(Long id) {
         return messageRepository.findById(id);
-
     }
 
-    public void saveMessage(Message message) {
+    public void save(Message message) {
         messageRepository.save(message);
+    }
+
+    public void delete(Long id) {
+        if (!messageRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Message not found with id: " + id);
+        }
+        messageRepository.deleteById(id);
     }
 }
