@@ -1,4 +1,4 @@
-package com.mq.manager.mqManager.Utils.enums.exceptions;
+package com.mq.manager.mqManager.Utils.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
