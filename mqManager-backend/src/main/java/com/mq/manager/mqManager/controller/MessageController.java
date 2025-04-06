@@ -50,29 +50,7 @@ public class MessageController {
 
     @PostMapping("/simulate")
     public ResponseEntity<String> simulateMessage(@RequestBody String content) {
-        // Create a list to store all message IDs
-        List<Long> messageIds = new ArrayList<>();
-
-        // Define the possible source applications
-        String[] sourceApps = { "app_1", "app_2", "app_3", "app_4", "app_5" };
-
-        // Generate 100 messages
-        for (int i = 1; i <= 100; i++) {
-            Message message = new Message();
-            message.setMessageId("message_" + i);
-            message.setContent(content + " (Message " + i + ")");
-            message.setReceivedAt(LocalDateTime.now());
-
-            // Randomly choose a source application from the defined list
-            int appIndex = (int) (Math.random() * sourceApps.length);
-            message.setSourceApplication(sourceApps[appIndex]);
-
-            // Save the message and collect its ID
-            messageService.save(message);
-            messageIds.add(message.getId());
-        }
-
-        String response = "Generated 100 messages with IDs: " + messageIds;
+        String response = mqService.sendMessageToMQ(content);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
