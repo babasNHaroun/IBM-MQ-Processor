@@ -5,8 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>2.7.18</version>
+		<relativePath/> 
 	</parent>
 	<groupId>com.mq.manager</groupId>
 	<artifactId>mqManager</artifactId>
@@ -39,11 +39,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		 <dependency>
-        <groupId>com.ibm.mq</groupId>
-        <artifactId>mq-jms-spring-boot-starter</artifactId>
-        <version>2.7.4</version>
-    </dependency>
+		<dependency>
+    <groupId>com.ibm.mq</groupId>
+    <artifactId>com.ibm.mq.allclient</artifactId>
+    <version>9.3.5.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-activemq</artifactId>
+</dependency>
+
 
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -53,7 +59,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+		    <version>1.18.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -78,6 +84,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
