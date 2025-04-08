@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <span>MQ Messages Manager</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/messages" routerLinkActive="active">
+    <mat-icon>message</mat-icon>
+    <span>Messages</span>
+  </button>
+  <button mat-button routerLink="/partners" routerLinkActive="active">
+    <mat-icon>group</mat-icon>
+    <span>Partners</span>
+  </button>
+</mat-toolbar>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

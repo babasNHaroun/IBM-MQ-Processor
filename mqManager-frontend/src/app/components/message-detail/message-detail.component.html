@@ -1,0 +1,47 @@
+<h2 mat-dialog-title class="dialog-title">Message Details</h2>
+<mat-dialog-content class="message-dialog-content">
+    <div class="message-details">
+        <mat-card>
+            <div class="detail-row">
+                <mat-icon class="detail-icon">message</mat-icon>
+                <span class="label">Message ID:</span>
+                <span class="value">{{message.messageId}}</span>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="detail-row content">
+                <mat-icon class="detail-icon">description</mat-icon>
+                <span class="label">Content:</span>
+                <pre class="value content-value">{{message.content}}</pre>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="detail-row">
+                <mat-icon class="detail-icon">apps</mat-icon>
+                <span class="label">Source Application:</span>
+                <span class="value">{{message.sourceApplication}}</span>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="detail-row">
+                <mat-icon class="detail-icon">queue</mat-icon>
+                <span class="label">Queue Name:</span>
+                <span class="value">{{message.queueName}}</span>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="detail-row">
+                <mat-icon class="detail-icon">schedule</mat-icon>
+                <span class="label">Received At:</span>
+                <span class="value">{{message.receivedAt | date:'medium'}}</span>
+            </div>
+        </mat-card>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()">Close</button>
+</mat-dialog-actions>

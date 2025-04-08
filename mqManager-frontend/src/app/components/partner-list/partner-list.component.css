@@ -1,0 +1,22 @@
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-partner-btn {
+    background-color: #1976d2 !important;
+    color: white !important;
+    font-weight: bold !important;
+    padding: 0 24px !important;
+    height: 45px;
+}
+
+.add-partner-btn:hover {
+    background-color: #1565c0 !important;
+}
+
+.add-partner-btn .mat-icon {
+    margin-right: 8px;
+}
