@@ -67,7 +67,7 @@ This will start:
 
 ### Database (customize if needed)
 
-- Database Name: mqmanager
+- Database Name: mq_messages_management
 - Username: root
 - Password: root
 
