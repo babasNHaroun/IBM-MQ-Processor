@@ -1,28 +1,33 @@
 package com.mq.manager.mqManager.service;
 
-import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mq.manager.mqManager.entity.Partner;
 import com.mq.manager.mqManager.Utils.exceptions.ResourceNotFoundException;
+import com.mq.manager.mqManager.Utils.helpers.Mapper;
 import com.mq.manager.mqManager.repository.PartnerRepository;
+import com.mq.manager.mqManager.service.dto.PartnerDTO;
+import com.mq.manager.mqManager.service.interfaces.PartnerInterface;
 
 @Service
-public class PartnerService {
+public class PartnerService implements PartnerInterface {
 
     private PartnerRepository partnerRepository;
+    private final Mapper mapper;
 
-    public PartnerService(PartnerRepository partnerRepository) {
+    public PartnerService(PartnerRepository partnerRepository, Mapper mapper) {
         this.partnerRepository = partnerRepository;
+        this.mapper = mapper;
     }
 
-    public List<Partner> findAll() {
-        return partnerRepository.findAll();
+    public Page<PartnerDTO> getAllPartners(Pageable pageable) {
+        return partnerRepository.findAll(pageable).map(mapper::convertPartnerToDTO);
     }
 
-    public void delete(Long id) {
+    public void deletePartner(Long id) {
         // use CrudRepository's existsById method
         if (!partnerRepository.existsById(id)) {
             throw new ResourceNotFoundException("Partner not found with id: " + id);
@@ -30,12 +35,12 @@ public class PartnerService {
         partnerRepository.deleteById(id);
     }
 
-    public Partner save(Partner partner) {
+    public Partner savePartner(Partner partner) {
         validatePartner(partner);
         return partnerRepository.save(partner);
     }
 
-    public Partner update(Long id, Partner partnerDetails) {
+    public Partner updatePartner(Long id, Partner partnerDetails) {
         Partner partner = findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Partner not found with id: " + id));
 
@@ -54,7 +59,7 @@ public class PartnerService {
         return partnerRepository.findById(id);
     }
 
-    public Partner getById(Long id) {
+    public Partner getPartnerById(Long id) {
         return findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Partner not found with id: " + id));
     }

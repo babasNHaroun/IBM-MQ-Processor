@@ -1,34 +1,41 @@
 package com.mq.manager.mqManager.service;
 
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.mq.manager.mqManager.Utils.exceptions.ResourceNotFoundException;
+import com.mq.manager.mqManager.Utils.helpers.Mapper;
 import com.mq.manager.mqManager.entity.Message;
 import com.mq.manager.mqManager.repository.MessageRepository;
+import com.mq.manager.mqManager.service.dto.MessageDTO;
+import com.mq.manager.mqManager.service.interfaces.MessageInterface;
 
 @Service
-public class MessageService {
+public class MessageService implements MessageInterface {
 
-    private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
+    private final Mapper mapper;
 
-    public MessageService(MessageRepository messageRepository) {
+    public MessageService(MessageRepository messageRepository, Mapper mapper) {
         this.messageRepository = messageRepository;
+        this.mapper = mapper;
     }
 
-    public List<Message> findAll() {
-        return messageRepository.findAll();
+    public Page<MessageDTO> getAllMessages(Pageable pageable) {
+        return messageRepository.findAll(pageable)
+                .map(mapper::convertMessageToDTO);
     }
 
-    public Optional<Message> findById(Long id) {
-        return messageRepository.findById(id);
+    public Optional<MessageDTO> findMessageById(Long id) {
+        return messageRepository.findById(id).map(mapper::convertMessageToDTO);
     }
 
-    public void save(Message message) {
-        messageRepository.save(message);
+    public Message saveMessage(Message message) {
+        return messageRepository.save(message);
     }
 
-    public void delete(Long id) {
+    public void deleteMessage(Long id) {
         if (!messageRepository.existsById(id)) {
             throw new ResourceNotFoundException("Message not found with id: " + id);
         }

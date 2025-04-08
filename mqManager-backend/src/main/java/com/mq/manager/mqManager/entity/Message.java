@@ -25,9 +25,13 @@ public class Message {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false, name = "queue_name")
+    private String queueName;
+
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 
     @Column(name = "source_application", nullable = false)
     private String sourceApplication;
+
 }
