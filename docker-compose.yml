@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build: 
+    build:
       context: ./mqManager-backend
       dockerfile: Dockerfile
     ports:
@@ -20,7 +20,7 @@ services:
       - app-network
 
   frontend:
-    build: 
+    build:
       context: ./mqManager-frontend
       dockerfile: Dockerfile
     ports:
@@ -33,7 +33,7 @@ services:
   mysql:
     image: mysql:8.0
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-data:C:/ProgramData/MySQL/data
     environment:
       - MYSQL_DATABASE=mq_messages_management
       - MYSQL_ROOT_PASSWORD=root
@@ -43,7 +43,11 @@ services:
       - app-network
 
   ibm-mq:
-    image: icr.io/ibm-messaging/mq/ibm-mqadvanced-server-dev:9.4.2.0-arm64
+    # For Windows: use this image
+    image: icr.io/ibm-messaging/mq:9.3.3.0-r1
+    # For MacOS ARM64: clone and build from https://github.com/ibm-messaging/mq-container
+    # git clone https://github.com/ibm-messaging/mq-container.git
+    # cd mq-container && make build-devserver
     ports:
       - "1414:1414"
       - "9443:9443"
