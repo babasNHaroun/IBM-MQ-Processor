@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./mqManager-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - ibm-mq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/mqmanager
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - IBM_MQ_HOST=ibm-mq
+      - IBM_MQ_PORT=1414
+    networks:
+      - app-network
+
+  frontend:
+    build: 
+      context: ./mqManager-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=mqmanager
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  ibm-mq:
+    image: icr.io/ibm-messaging/mq/ibm-mqadvanced-server-dev:9.4.2.0-arm64
+    ports:
+      - "1414:1414"
+      - "9443:9443"
+    environment:
+      - LICENSE=accept
+      - MQ_QMGR_NAME=QM1
+    volumes:
+      - ibm-mq-data:/mnt/mqm
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+  ibm-mq-data:
+
+networks:
+  app-network:
+    driver: bridge
