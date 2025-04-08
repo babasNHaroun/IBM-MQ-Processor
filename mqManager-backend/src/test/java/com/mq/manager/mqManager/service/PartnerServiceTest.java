@@ -3,29 +3,35 @@ package com.mq.manager.mqManager.service;
 import com.mq.manager.mqManager.Utils.enums.ProcessedFlowType;
 import com.mq.manager.mqManager.Utils.enums.Direction;
 import com.mq.manager.mqManager.entity.Partner;
+import com.mq.manager.mqManager.repository.PartnerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach; 
+import org.junit.jupiter.api.BeforeEach;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class PartnerServiceTest {
 
-    private Partner partner;
+    @Mock
+    private PartnerRepository partnerRepository;
 
-    @Autowired
+    @InjectMocks
     private PartnerService partnerService;
+
+    private Partner partner;
 
     @BeforeEach
     void setUp() {
         partner = new Partner();
+        partner.setId(1L);
         partner.setAlias("Partner1");
         partner.setType("Type1");
         partner.setDirection(Direction.INBOUND);
@@ -35,11 +41,11 @@ public class PartnerServiceTest {
 
     @Test
     public void testSavePartner() {
+        when(partnerRepository.save(any(Partner.class))).thenReturn(partner);
 
         Partner savedPartner = partnerService.savePartner(partner);
 
         assertNotNull(savedPartner);
-        assertNotNull(savedPartner.getId());
         assertEquals("Partner1", savedPartner.getAlias());
         assertEquals(Direction.INBOUND, savedPartner.getDirection());
         assertEquals(ProcessedFlowType.MESSAGE, savedPartner.getProcessedFlowType());
@@ -47,22 +53,24 @@ public class PartnerServiceTest {
     }
 
     @Test
-    public void tesUpdatedPartner() {
+    public void testUpdatePartner() {
+        Partner updatedPartner = new Partner();
+        updatedPartner.setId(1L);
+        updatedPartner.setAlias("Partner1_1");
+        updatedPartner.setType("Type1_1");
+        updatedPartner.setDirection(Direction.OUTBOUND);
+        updatedPartner.setProcessedFlowType(ProcessedFlowType.ALERTING);
+        updatedPartner.setDescription("Description1_1");
 
-        Partner savedPartner = partnerService.savePartner(partner);
-        savedPartner.setAlias("Parnter1_1");
-        partner.setType("Type1_1");
-        partner.setDirection(Direction.OUTBOUND);
-        partner.setProcessedFlowType(ProcessedFlowType.ALERTING);
-        partner.setDescription("Description1_1");
+        when(partnerRepository.findById(1L)).thenReturn(java.util.Optional.of(partner));
+        when(partnerRepository.save(any(Partner.class))).thenReturn(updatedPartner);
 
-        Partner updatedPartner = partnerService.updatePartner(savedPartner.getId(), savedPartner);
+        Partner result = partnerService.updatePartner(1L, updatedPartner);
 
-        assertEquals("Parnter1_1", updatedPartner.getAlias());
-        assertEquals("Type1_1", updatedPartner.getType());
-        assertEquals(Direction.OUTBOUND, updatedPartner.getDirection());
-        assertEquals(ProcessedFlowType.ALERTING, updatedPartner.getProcessedFlowType());
-        assertEquals("Description1_1", updatedPartner.getDescription());
-
+        assertEquals("Partner1_1", result.getAlias());
+        assertEquals("Type1_1", result.getType());
+        assertEquals(Direction.OUTBOUND, result.getDirection());
+        assertEquals(ProcessedFlowType.ALERTING, result.getProcessedFlowType());
+        assertEquals("Description1_1", result.getDescription());
     }
 }
